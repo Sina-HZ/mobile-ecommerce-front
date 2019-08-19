@@ -40,7 +40,7 @@ class AdminProducts extends React.Component{
     return(
       <React.Fragment>
 
-        <Header />
+        <Header route={this.props.history}/>
         <Container>
           <Row className="container" style={{marginTop: '50px',minHeight : '450px'}}>
             <Col sm="12" md={6} id="Admin-Form-Col">
