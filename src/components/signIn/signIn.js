@@ -1,0 +1,145 @@
+import React from 'react';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import {Link} from 'react-router-dom';
+import ErrorSnackBar from '../snackbar/snackBar';
+import Axios from 'axios';
+
+const BootstrapButton = withStyles({
+    root: {
+        boxShadow: 'none',
+        textTransform: 'none',
+        fontSize: 16,
+        padding: '6px 12px',
+        border: '1px solid',
+        lineHeight: 1.5,
+        backgroundColor: '#007bff',
+        borderColor: '#007bff',
+        fontFamily: [
+            '-apple-system',
+            'BlinkMacSystemFont',
+            '"Segoe UI"',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif',
+            '"Apple Color Emoji"',
+            '"Segoe UI Emoji"',
+            '"Segoe UI Symbol"',
+        ].join(','),
+        '&:hover': {
+            backgroundColor: '#0069d9',
+            borderColor: '#0062cc',
+        },
+        '&:active': {
+            boxShadow: 'none',
+            backgroundColor: '#0062cc',
+            borderColor: '#005cbf',
+        },
+        '&:focus': {
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+        },
+    },
+})(Button);
+
+
+const useStyles = makeStyles(theme => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        flexDirection: 'column',
+        alignContent: 'center'
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 280,
+    },
+    dense: {
+        marginTop: 19,
+    },
+    menu: {
+        width: 200,
+    },
+    button: {
+        margin: theme.spacing(1),
+        borderRadius: 30,
+        marginTop: 60,
+
+    },
+    buttonColor: {
+        backgroundColor: '#0080ff',
+    }
+}));
+
+
+export default function SignIn(props) {
+    const classes = useStyles();
+    const [values, setValues] = React.useState({
+        username: '',
+        password: '',
+        error : false,
+    });
+
+    const {redirect} = props;
+
+    const handleChange = name => event => {
+        setValues({ ...values, [name]: event.target.value });
+    };
+
+    const handleOfSubmit = e => {
+        
+        Axios({
+            url : 'http://localhost:3030/api/v1/login',
+            method : 'POST',
+            data : {
+                email : values.username,
+                password : values.password
+            }
+        }).then(res => {
+            console.log(res.data);
+            // const token = localStorage.getItem(token);
+            if(res.data.success === false){
+                   setValues({...values,error: true})     
+            }else{
+                localStorage.setItem('token', res.data.token)
+                redirect.push("/");
+            }
+        })
+    }
+    return (
+        <div className={classes.container}>
+            <h1 style={{ textAlign: 'center', color: '#444444' }}>Sign in</h1>
+            <div style={{ borderBottom: '4px solid rgba(0,123,255)', width: '40px', display: 'block', marginRight: 'auto', marginLeft: 'auto', marginTop: '15px' }}></div>
+            <form className={classes.container} noValidate autoComplete="off">
+                <TextField
+                    id="userName"
+                    label="Username"
+                    type="email"
+                    className={classes.textField}
+                    value={values.username}
+                    onChange={handleChange('username')}
+                    margin="normal"
+                />
+                <TextField
+                    id="password"
+                    label="password"
+                    type="password"
+                    className={classes.textField}
+                    value={values.password}
+                    onChange={handleChange('password')}
+                    margin="normal"
+                />
+                <BootstrapButton variant="contained" onClick={handleOfSubmit} color="primary" className={classes.button}>
+                    Login
+                </BootstrapButton>
+                <p style={{ textAlign: 'center' }}>Not a member yet? <Link to="/register" >Sign up</Link> free </p>
+            </form>
+            <div>
+                {values.error && <ErrorSnackBar failLogin="اطلاعات وارد شده صحیح نمی باشد" />}  
+            </div>
+        </div>
+
+    );
+}
