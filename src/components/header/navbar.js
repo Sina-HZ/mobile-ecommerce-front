@@ -49,7 +49,7 @@ export default function Header(props) {
   }
 
   return (
-    <div className={classes.grow}>
+    <div className={classes.grow} data-uk-sticky="top: 100; animation: uk-animation-slide-top; bottom: #sticky-on-scroll-up">
       <AppBar position="static">
         <Toolbar className="flex-row-reverse container justify-content-between">
             <div>

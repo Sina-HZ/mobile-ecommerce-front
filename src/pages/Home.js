@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, } from 'reactstrap';
-import SlideShow from '../components/SlideShow/slideShow'
+import SlideShow from '../components/slider/sliderUiKit';
 import Axios from 'axios';
 import MobileCard from '../components/card/cards';
 import Header from '../components/header/navbar';
@@ -20,7 +20,6 @@ export default class Home extends React.Component {
             url: 'http://localhost:3030/api/v1/mobile',
             method: 'get'
         }).then(res => {
-            console.log('mobileList res', res.data);
             this.setState({
                 mobileList: res.data
             })
@@ -28,7 +27,6 @@ export default class Home extends React.Component {
         );
     }
     render() {
-        console.log('mobileList', this.state.mobileList);
         return (
             <React.Fragment>
                 <Header route={this.props.history}/>
